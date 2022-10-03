@@ -9,8 +9,12 @@ const stop2 = 150;
 const half = 2;
 const triple = 3;
 const zero = 0;
-// const
-
+const big = 255;
+const variable1 = 20;
+const variable2 = 0.5;
+const backColor = 87;
+const alpha1 = 60;
+const weight = 4;
 
 
 
@@ -22,26 +26,25 @@ function setup(){
     amp = new p5.Amplitude();
     noStroke();
     fft = new p5.FFT();
-    frameRate(20);
+    frameRate(variable1);
     osc = new p5.Oscillator();
     osc.setType("sine");
     osc.start();
-
 }
 function draw(){
-    background(87);
+    background(backColor);
 
     osc.amp(mouseY/height);
-    osc.freq(mouseY*0.5);
+    osc.freq(mouseY*variable2);
 
-    fill(255,255,255);
+    fill(big,big,big);
 
     ellipse(width/half,height/half,triple*map(amp.getLevel(),start1,stop1,start2,stop2),triple*map(amp.getLevel(),start1,stop1,start2,stop2));
     let waveform = fft.waveform();
     noFill();
-    stroke(zero,zero,zero,60);
+    stroke(zero,zero,zero,alpha1);
 
-    strokeWeight(4);
+    strokeWeight(weight);
     let x;
     let y;
     let x1;
@@ -69,10 +72,10 @@ function mousePressed(){
     if (Sound.isPlaying()) {
         Sound.stop();
         osc.stop(zero);
-        background(255, zero, zero);
+        background(big, zero, zero);
     } else {
         Sound.play();
-        osc.start(zero,mouseY*0.5)
-        background(zero, 255, zero);
+        osc.start(zero,mouseY*variable2)
+        background(zero, big, zero);
     }
 }
