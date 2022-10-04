@@ -19,11 +19,15 @@ const weight = 4;
 
 
 
-function preload(){
-    Sound = loadSound('timbre.flac');
-}
+
+
+// function preload(){
+//     Sound = loadSound('timbre.flac');
+// }
 function setup(){
     createCanvas(windowWidth,windowHeight);
+
+    Sound = loadSound('timbre.flac',loaded);
     amp = new p5.Amplitude();
     noStroke();
     fft = new p5.FFT();
@@ -33,6 +37,10 @@ function setup(){
     osc.start();
 }
 function draw(){
+    let x;
+    let y;
+    let x1;
+    let y1;
     background(backColor);
 
     osc.amp(mouseY/height);
@@ -46,18 +54,9 @@ function draw(){
     stroke(zero,zero,zero,alpha1);
 
     strokeWeight(weight);
-    let x;
-    let y;
-    let x1;
-    let y1;
+
     for (let i = zero; i < waveform.length; i++) {
-        let angle = map(i, zero, 1024, zero, 360);
-        x = width / half + cos(angle) * 180;
-        y = height / half + sin(angle) * 180;
-        let r = map(waveform[i], -0.8, 0.8, 50, 220);
-        x1 = width / half + cos(angle) * r*half;
-        y1 = height / half + sin(angle) * r*half;
-        line(x, y, x1, y1);
+        line(width / half + cos(map(i, zero, 1024, zero, 360)) * 180, height / half + sin(map(i, zero, 1024, zero, 360)) * 180, width / half + cos(map(i, zero, 1024, zero, 360)) * map(waveform[i], -0.8, 0.8, 50, 220)*half, height / half + sin(map(i, zero, 1024, zero, 360)) * map(waveform[i], -0.8, 0.8, 50, 220)*half);
     }
 
     xxx=xxx+((mouseX-xxx)*easing);
@@ -68,15 +67,39 @@ function draw(){
 
 
 }
-function mousePressed(){
-    // Sound.play();
+// function mousePressed(){
+//     // Sound.play();
+//     if (Sound.isPlaying()) {
+//         Sound.stop();
+//         osc.stop(zero);
+//     } else {
+//         Sound.play();
+//         osc.start(zero,mouseY*variable2)
+//     }
+// }
+
+var musicPlaying = false;
+
+function pressed() {
+    musicPlaying = true;
+
     if (Sound.isPlaying()) {
+        Sound.pause();
         Sound.stop();
         osc.stop(zero);
-        background(big, zero, zero);
-    } else {
+        button.html("play");
+    }
+    else {
+        Sound.loop();
         Sound.play();
         osc.start(zero,mouseY*variable2)
-        background(zero, big, zero);
+        button.html("pause");
     }
+}
+
+function loaded() {
+    button = createButton("Begin");
+    button.mousePressed(pressed);
+    button.position(200,200);
+
 }
